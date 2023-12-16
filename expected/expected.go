@@ -116,28 +116,28 @@ func (e Expected[T]) Or(v abstract.Optional[T]) abstract.Optional[T] {
 	return v
 }
 
-func (e Expected[T]) OrLazy(gen func() abstract.Optional[T]) abstract.Optional[T] {
+func (e Expected[T]) OrLazyOpt(gen func() abstract.Optional[T]) abstract.Optional[T] {
 	if e.HasValue() {
 		return e
 	}
 	return gen()
 }
 
-func (e Expected[T]) OrLazyWithErr(gen func() (abstract.Optional[T], error)) (abstract.Optional[T], error) {
+func (e Expected[T]) OrLazyOptE(gen func() (abstract.Optional[T], error)) (abstract.Optional[T], error) {
 	if e.HasValue() {
 		return e, nil
 	}
 	return gen()
 }
 
-func (e Expected[T]) OrLazyWithCtx(ctx context.Context, gen func(context.Context) abstract.Optional[T]) abstract.Optional[T] {
+func (e Expected[T]) OrLazyOptC(ctx context.Context, gen func(context.Context) abstract.Optional[T]) abstract.Optional[T] {
 	if e.HasValue() {
 		return e
 	}
 	return gen(ctx)
 }
 
-func (e Expected[T]) OrLazyWithCtxErr(ctx context.Context, gen func(context.Context) (abstract.Optional[T], error)) (abstract.Optional[T], error) {
+func (e Expected[T]) OrLazyOptCE(ctx context.Context, gen func(context.Context) (abstract.Optional[T], error)) (abstract.Optional[T], error) {
 	if e.HasValue() {
 		return e, nil
 	}
@@ -146,7 +146,7 @@ func (e Expected[T]) OrLazyWithCtxErr(ctx context.Context, gen func(context.Cont
 
 // Defaulted value getters.
 
-func (e Expected[T]) ValueOrZero() T {
+func (e Expected[T]) OrZero() T {
 	if e.HasValue() {
 		return *e.value
 	}
@@ -154,35 +154,35 @@ func (e Expected[T]) ValueOrZero() T {
 	return zero
 }
 
-func (e Expected[T]) ValueOrValue(v T) T {
+func (e Expected[T]) OrValue(v T) T {
 	if e.HasValue() {
 		return *e.value
 	}
 	return v
 }
 
-func (e Expected[T]) ValueOrLazy(gen func() T) T {
+func (e Expected[T]) OrLazy(gen func() T) T {
 	if e.HasValue() {
 		return *e.value
 	}
 	return gen()
 }
 
-func (e Expected[T]) ValueOrLazyWithErr(gen func() (T, error)) (T, error) {
+func (e Expected[T]) OrLazyE(gen func() (T, error)) (T, error) {
 	if e.HasValue() {
 		return *e.value, nil
 	}
 	return gen()
 }
 
-func (e Expected[T]) ValueOrLazyWithCtx(ctx context.Context, gen func(context.Context) T) T {
+func (e Expected[T]) OrLazyC(ctx context.Context, gen func(context.Context) T) T {
 	if e.HasValue() {
 		return *e.value
 	}
 	return gen(ctx)
 }
 
-func (e Expected[T]) ValueOrLazyWithCtxErr(ctx context.Context, gen func(context.Context) (T, error)) (T, error) {
+func (e Expected[T]) OrLazyCE(ctx context.Context, gen func(context.Context) (T, error)) (T, error) {
 	if e.HasValue() {
 		return *e.value, nil
 	}
@@ -205,21 +205,21 @@ func (e Expected[T]) PtrOrLazyPtr(gen func() *T) *T {
 	return gen()
 }
 
-func (e Expected[T]) PtrOrLazyPtrWithErr(gen func() (*T, error)) (*T, error) {
+func (e Expected[T]) PtrOrLazyPtrE(gen func() (*T, error)) (*T, error) {
 	if e.HasValue() {
 		return e.value, nil
 	}
 	return gen()
 }
 
-func (e Expected[T]) PtrOrLazyPtrWithCtx(ctx context.Context, gen func(context.Context) *T) *T {
+func (e Expected[T]) PtrOrLazyPtrC(ctx context.Context, gen func(context.Context) *T) *T {
 	if e.HasValue() {
 		return e.value
 	}
 	return gen(ctx)
 }
 
-func (e Expected[T]) PtrOrLazyPtrWithCtxErr(ctx context.Context, gen func(context.Context) (*T, error)) (*T, error) {
+func (e Expected[T]) PtrOrLazyPtrCE(ctx context.Context, gen func(context.Context) (*T, error)) (*T, error) {
 	if e.HasValue() {
 		return e.value, nil
 	}
@@ -234,20 +234,20 @@ func (e Expected[T]) Foreach(callback func(T)) {
 	}
 }
 
-func (e Expected[T]) ForeachWithErr(callback func(T) error) error {
+func (e Expected[T]) ForeachE(callback func(T) error) error {
 	if e.HasValue() {
 		return callback(*e.value)
 	}
 	return nil
 }
 
-func (e Expected[T]) ForeachWithCtx(ctx context.Context, callback func(context.Context, T)) {
+func (e Expected[T]) ForeachC(ctx context.Context, callback func(context.Context, T)) {
 	if e.HasValue() {
 		callback(ctx, *e.value)
 	}
 }
 
-func (e Expected[T]) ForeachWithCtxErr(ctx context.Context, callback func(context.Context, T) error) error {
+func (e Expected[T]) ForeachCE(ctx context.Context, callback func(context.Context, T) error) error {
 	if e.HasValue() {
 		return callback(ctx, *e.value)
 	}
@@ -260,20 +260,20 @@ func (e Expected[T]) ForeachPtr(callback func(*T)) {
 	}
 }
 
-func (e Expected[T]) ForeachPtrWithErr(callback func(*T) error) error {
+func (e Expected[T]) ForeachPtrE(callback func(*T) error) error {
 	if e.HasValue() {
 		return callback(e.value)
 	}
 	return nil
 }
 
-func (e Expected[T]) ForeachPtrWithCtx(ctx context.Context, callback func(context.Context, *T)) {
+func (e Expected[T]) ForeachPtrC(ctx context.Context, callback func(context.Context, *T)) {
 	if e.HasValue() {
 		callback(ctx, e.value)
 	}
 }
 
-func (e Expected[T]) ForeachPtrWithCtxErr(ctx context.Context, callback func(context.Context, *T) error) error {
+func (e Expected[T]) ForeachPtrCE(ctx context.Context, callback func(context.Context, *T) error) error {
 	if e.HasValue() {
 		return callback(ctx, e.value)
 	}
